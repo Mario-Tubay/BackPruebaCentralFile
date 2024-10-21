@@ -11,5 +11,7 @@ Route::post('/user/create', [UserController::class, 'create'])->name("user.creat
 Route::get('/user/{id}', [UserController::class, 'getUsers'])->name("user.getUsers");
 Route::get('/user/getContacts/{id}', [UserController::class, 'getContacts'])->name("user.getContacts");
 Route::get('/user/getNotContact/{id}', [UserController::class, 'getNotContact'])->name("user.getNotContact");
+Route::post('/user/addUserContact', [UserController::class, 'addUserContact'])->name("user.addUserContact");
+Route::post('/user/uploadImage', [UserController::class, 'uploadImage'])->name("user.uploadImage");
 
 

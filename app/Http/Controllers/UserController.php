@@ -65,7 +65,14 @@ class UserController  extends Controller
                     "message" => "Ya existe un usuario con ese correo"
                 ];
             }
-            User::create([
+
+            $file = $request->file('file');
+            $destino = 'storage/';
+            $fileName = time() . " - " . $file->getClientOriginalName();
+            $upload = $request->file('file')->move($destino, $fileName);
+            $upload;
+
+            $id_new = User::insertGetId([
                 "nombre1" => $request->nombre1,
                 "nombre2" => $request->nombre2,
                 "apellido1" => $request->apellido1,
@@ -73,19 +80,21 @@ class UserController  extends Controller
                 "email" => $request->email,
                 "telefono" => $request->telefono,
                 "celular" => $request->celular,
-                "password" => Hash::make($request->password)
+                "password" => Hash::make($request->password),
+                'foto' => $destino . $fileName
 
             ]);
             DB::commit();
             return [
                 "status" => "success",
-                "message" => "User created successfully"
+                "message" => "User created successfully",
+                "id" => $id_new
             ];
         } catch (\Exception $e) {
             DB::rollBack();
             return [
                 "status" => "error",
-                "message" => "Error al crear el usuario",
+                "message" => "Error al crear el usuario, revise el tamaño de la imagen",
                 "error" => $e->getMessage()
             ];
         }
@@ -120,7 +129,8 @@ class UserController  extends Controller
                     "u.apellido2",
                     "u.email",
                     "u.telefono",
-                    "u.celular"
+                    "u.celular",
+                    "u.foto"
                 ]);
             return [
                 "status" => "success",
@@ -135,10 +145,11 @@ class UserController  extends Controller
         }
     }
 
-    public function getNotContact($id){
+    public function getNotContact($id)
+    {
         try {
-            $users = User::whereNotIn("id", function($query) use ($id){
-                $query->select("id_usercont")->from("user_contact")->where("id_user", $id);
+            $users = User::whereNotIn("id", function ($query) use ($id) {
+                $query->select("id_usercont")->from("user_contact")->where("id_user", $id)->where("estado", 1);
             })->where("id", "!=", $id)->where("estado", 1)->get([
                 "id",
                 "nombre1",
@@ -147,11 +158,13 @@ class UserController  extends Controller
                 "apellido2",
                 "email",
                 "telefono",
-                "celular"
+                "celular",
+                "foto"
             ]);
             return [
                 "status" => "success",
-                "users" => $users
+                "users" => $users,
+                "url"=> url('/')."/"
             ];
         } catch (\Exception $e) {
             return [
@@ -162,7 +175,8 @@ class UserController  extends Controller
         }
     }
 
-    public function addUserContact(Request $request){
+    public function addUserContact(Request $request)
+    {
         DB::beginTransaction();
         try {
             UserContact::create([
@@ -184,4 +198,31 @@ class UserController  extends Controller
         }
     }
 
+    public function uploadImage(Request $request)
+    {
+        try {
+
+            $file = $request->file('file');
+            $destino = 'storage/';
+            $fileName = time() . " - " . $file->getClientOriginalName();
+            $upload = $request->file('file')->move($destino, $fileName);
+            $upload;
+
+            User::where('id', $request->id_user)->update([
+                'foto' => $destino . $fileName
+            ]);
+
+            return [
+                "status" => "success",
+                "message" => "Imagen subida correctamente",
+                "path" => $destino . $fileName
+            ];
+        } catch (\Exception $e) {
+            return [
+                "status" => "error",
+                "message" => "Error al subir la imagen",
+                "error" => $e->getMessage()
+            ];
+        }
+    }
 }
