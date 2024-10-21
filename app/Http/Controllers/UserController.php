@@ -33,7 +33,8 @@ class UserController  extends Controller
                     "email" => $user->email,
                     "telefono" => $user->telefono,
                     "celular" => $user->celular,
-                    "id" => $user->id
+                    "id" => $user->id,
+                    "foto" => $user->foto
                 ]
             ];
         } else {
@@ -121,7 +122,10 @@ class UserController  extends Controller
     {
         try {
             $users = UserContact::join("user as u", "u.id", "user_contact.id_usercont")
-                ->where("user_contact.id_user", $id)->where("user_contact.estado", 1)->get([
+                ->where("user_contact.id_user", $id)
+                ->where("user_contact.estado", 1)
+                ->where("u.estado", 1)
+                ->get([
                     "u.id",
                     "u.nombre1",
                     "u.nombre2",
@@ -164,7 +168,7 @@ class UserController  extends Controller
             return [
                 "status" => "success",
                 "users" => $users,
-                "url"=> url('/')."/"
+                "url" => url('/') . "/"
             ];
         } catch (\Exception $e) {
             return [
@@ -221,6 +225,204 @@ class UserController  extends Controller
             return [
                 "status" => "error",
                 "message" => "Error al subir la imagen",
+                "error" => $e->getMessage()
+            ];
+        }
+    }
+
+    public function deleteContact(Request $request)
+    {
+        DB::beginTransaction();
+        try {
+            UserContact::where("id_user", $request->id_user)->where("id_usercont", $request->id_usercont)->update([
+                "estado" => 0
+            ]);
+            DB::commit();
+            return [
+                "status" => "success",
+                "message" => "Contacto eliminado correctamente"
+            ];
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return [
+                "status" => "error",
+                "message" => "Error al eliminar el contacto",
+                "error" => $e->getMessage()
+            ];
+        }
+    }
+
+    public function updatePhotProfile(Request $request)
+    {
+        DB::beginTransaction();
+        try {
+            $file = $request->file('file');
+            $destino = 'storage/';
+            $fileName = time() . " - " . $file->getClientOriginalName();
+            $upload = $request->file('file')->move($destino, $fileName);
+            $upload;
+
+            User::where('id', $request->id_user)->update([
+                'foto' => $destino . $fileName
+            ]);
+
+            DB::commit();
+            return [
+                "status" => "success",
+                "message" => "Foto actualizada correctamente",
+                "path" => $destino . $fileName
+            ];
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return [
+                "status" => "error",
+                "message" => "Error al actualizar la foto",
+                "error" => $e->getMessage()
+            ];
+        }
+    }
+
+    public function deleteUserPermanent(Request $request)
+    {
+        DB::beginTransaction();
+        try {
+            UserContact::where('id_user', $request->id_user)->delete();
+            User::where('id', $request->id_user)->delete();
+            DB::commit();
+            return [
+                "status" => "success",
+                "message" => "Usuario eliminado correctamente"
+            ];
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return [
+                "status" => "error",
+                "message" => "Error al eliminar el usuario",
+                "error" => $e->getMessage()
+            ];
+        }
+    }
+
+    public function deleteUser(Request $request)
+    {
+        DB::beginTransaction();
+        try {
+            User::where('id', $request->id_user)->update([
+                'estado' => 0
+            ]);
+
+            DB::commit();
+            return [
+                "status" => "success",
+                "message" => "Usuario eliminado correctamente"
+            ];
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return [
+                "status" => "error",
+                "message" => "Error al eliminar el usuario",
+                "error" => $e->getMessage()
+            ];
+        }
+    }
+
+    public function getUserById($id)
+    {
+        try {
+            $user = User::where("id", $id)->first();
+            return [
+                "status" => "success",
+                "user" => [
+                    "nombre1" => $user->nombre1,
+                    "nombre2" => $user->nombre2,
+                    "apellido1" => $user->apellido1,
+                    "apellido2" => $user->apellido2,
+                    "email" => $user->email,
+                    "telefono" => $user->telefono,
+                    "celular" => $user->celular,
+                    "id" => $user->id,
+                    "foto" => $user->foto
+                ]
+            ];
+        } catch (\Exception $e) {
+            return [
+                "status" => "error",
+                "message" => "Error al obtener el usuario",
+                "error" => $e->getMessage()
+            ];
+        }
+    }
+
+    public function updateUser(Request $request)
+    {
+        DB::beginTransaction();
+        try {
+            $messageError = "";
+            if ($request->nombre1 == "" || $request->nombre2 == "" || $request->apellido1 == "" || $request->apellido2 == "" || $request->email == "") {
+                $messageError = "Faltan campos por llenar";
+            }
+            if ($messageError != "") {
+                return [
+                    "status" => "error",
+                    "message" => $messageError
+                ];
+            }
+
+            $userEmail = User::where("email", "like", trim($request->email))->where("id", "!=", $request->id)->first();
+            if (!is_null($userEmail)) {
+                return [
+                    "status" => "error",
+                    "message" => "Ya existe un usuario con ese correo"
+                ];
+            }
+
+            // return $request->all();
+            $user = User::find($request->id);
+
+            if (isset($request->password) and trim($request->password) != "") {
+                $user->password = Hash::make($request->password);
+            }
+            $user->nombre1 = $request->nombre1;
+            $user->nombre2 = $request->nombre2;
+            $user->apellido1 = $request->apellido1;
+            $user->apellido2 = $request->apellido2;
+            $user->email = $request->email;
+            $user->telefono = $request->telefono;
+            $user->celular = $request->celular;
+            $user->save();
+            DB::commit();
+            return [
+                "status" => "success",
+                "message" => "Se actualizao correctamente",
+                "id" => $request->id
+            ];
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return [
+                "status" => "error",
+                "message" => "No se puedo actualizar",
+                "error" => $e->getMessage()
+            ];
+        }
+    }
+    public function deshabilitarCuenta(Request $request)
+    {
+        DB::beginTransaction();
+        try {
+            $user = User::find($request->id);
+            $user->estado = 0;
+            $user->save();
+            DB::commit();
+            return [
+                "status" => "success",
+                "message" => "Se deshabilito correctamente",
+                "id" => $request->id
+            ];
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return [
+                "status" => "error",
+                "message" => "No se puedo deshabilitar",
                 "error" => $e->getMessage()
             ];
         }

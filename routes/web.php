@@ -13,5 +13,10 @@ Route::get('/user/getContacts/{id}', [UserController::class, 'getContacts'])->na
 Route::get('/user/getNotContact/{id}', [UserController::class, 'getNotContact'])->name("user.getNotContact");
 Route::post('/user/addUserContact', [UserController::class, 'addUserContact'])->name("user.addUserContact");
 Route::post('/user/uploadImage', [UserController::class, 'uploadImage'])->name("user.uploadImage");
-
-
+Route::post('/user/deleteContact', [UserController::class, 'deleteContact'])->name("user.deleteContact");
+Route::post('/user/updatePhotProfile', [UserController::class, 'updatePhotProfile'])->name("user.updatePhotProfile");
+Route::post('/user/deleteUserPermanent', [UserController::class, 'deleteUserPermanent'])->name("user.deleteUserPermanent");
+Route::post('/user/updatePhotProfile', [UserController::class, 'updatePhotProfile'])->name("user.updatePhotProfile");
+Route::get('/user/getUserById/{id}', [UserController::class, 'getUserById'])->name("user.getUserById");
+Route::post('/user/updateUser', [UserController::class, 'updateUser'])->name("user.updateUser");
+Route::post('/user/deshabilitarCuenta', [UserController::class, 'deshabilitarCuenta'])->name("user.deshabilitarCuenta");
