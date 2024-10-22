@@ -1,6 +1,6 @@
 ## 🖥️ Pasos para el uso
 
-Este backen se subio a un servidor que tenia disponible con el dominio por motivas de pruebas lo use [facturalgo.com](https://www.facturalgo.com), ahi que tomar en cuenta que solo lo use para backend.
+Este backend se subio a un servidor que tenia disponible con el dominio por motivas de pruebas lo use [facturalgo.com](https://www.facturalgo.com), hay que tomar en cuenta que solo lo use para backend.
 
 ## Instalación
 1. Puede seguir los pasos de instalacion en la documentacion oficial [Laravel](https://laravel.com/docs/11.x/installation)
