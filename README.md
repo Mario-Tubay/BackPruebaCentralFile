@@ -1,66 +1,49 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+## 🖥️ Pasos para el uso
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Este backen se subio a un servidor que tenia disponible con el dominio por motivas de pruebas lo use [facturalgo.com](https://www.facturalgo.com), ahi que tomar en cuenta que solo lo use para backend.
 
-## About Laravel
+## Instalación
+1. Puede seguir los pasos de instalacion en la documentacion oficial [Laravel](https://laravel.com/docs/11.x/installation)
+2. Clonar el repositorio usando el comando `https://github.com/Mario-Tubay/BackPruebaCentralFile.git`.
+3. Crear una base de datos los archivos los puedes encontrar en la carpeta `/schemeDB` que estaran las tablas
+4. Editar el `env.example`, cambiarle de nombre a `.env`  
+5. Ejecutar los comandos comando.
+```bash
+composer install
+php artisan key:generate  
+```
+6. Una vez seguido los estos pasos el ambiente debe funcionar correctamente 
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+Los endpint los puede revisar en `routes/web.php`
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### ¿Cómo decidió las opciones técnicas y arquitectónicas utilizadas como parte de su solución?
+Use Laravel en el backend, como sabemos este Framework esta basado en el lenguage de programación `PHP`, aqui las opciones por las que me decidi por este Framework 
+1. Facilidad de aprendizaje 
+2. Integracion muy facil de APIs
+3. Desarrollar en este Framework es super sencillo y rapido, la sintaxis de codigo es intuitiva
 
-## Learning Laravel
+Para las contraseñas se encriptaron para que sea dificil acceder a ellas
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### ¿Qué haría de manera diferente si se le asignara más tiempo?
+1. Mejoras en las consultas, para que el rendimiento sea el mas optimo posible
+2. Mas tiempo para realizar pruebas 
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+###  ¿Para casos donde se deben guardar grandes cantidades de datos como por ejemplo varias fotos de alta calidad, que lógica manejaría para que la aplicación funcione de la forma más óptima?
+Para estos casos se podria aplicar algunas estrategias 
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+1. El uso de de servicios en las nube: Como sabemos el manejor de imagenes aveces es un poco tedioso por suerte hay servicios que nos ayudan por mencionar algunos tenemos a [Cloudinary](https://cloudinary.com/) este servicio aparte de guardar en la nube las fotos tiene varios servicios mas como reducir imagen para al momento de usar api cargar el que se necesita especificamente, al igual tenemes [AWS](https://aws.amazon.com/es/).
 
-## Laravel Sponsors
+2. Si lo estamos guardando en servidores propios o terceros lo mejor para que el espacio no se llene seria comprimir las imagenes, reducir su tamaño o su tipo, por ejemplo WebP que se esta usando cada vez mas porque es mas liviano.
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
 
-### Premium Partners
+### Algunas imagenes de la App 
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+### End Point
 
-## Contributing
+<img src="public/endpoint.png" alt="Login App" width="700" />
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
 
-## Code of Conduct
+### Encriptacion de contraseña y subida de imagen al servidor
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+<img src="public/controller.png" alt="controller" width="700" />
