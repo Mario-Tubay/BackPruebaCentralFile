@@ -22,6 +22,10 @@ class UserController  extends Controller
         }
 
         if (Hash::check($request->password, $user->password)) {
+            if($user->estado == 0){
+                $user->estado = 1;
+                $user->save();
+            }
             return [
                 "status" => "success",
                 "message" => "Login success",
